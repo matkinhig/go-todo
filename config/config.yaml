@@ -1,0 +1,9 @@
+# // [username/[password]@]host[:port][/service_name][?param1=value1&...&paramN=valueN]
+OracleDB :
+  Uri : 103.74.116.95:1521/corefbe
+  Host : 103.74.116.95
+  User : SYS
+  Password : Corefbe123456
+
+Encrypt : 
+  Secret : my-secret
