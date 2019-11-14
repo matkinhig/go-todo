@@ -1,9 +1,15 @@
-# // [username/[password]@]host[:port][/service_name][?param1=value1&...&paramN=valueN]
-OracleDB :
-  Uri : 103.74.116.95:1521/corefbe
-  Host : 103.74.116.95
-  User : SYS
-  Password : Corefbe123456
+OracleDB:
+  Uri: USER_NHS/nhsVB123456@192.168.254.34:1521/tcbsweb
+  # Host: 192.168.254.34:1521/tcbsweb
+  # User: USER_NHS
+  # Password: nhsVB123456
 
-Encrypt : 
-  Secret : my-secret
+Encrypt:
+  Secret: my-secret
+
+
+#  url public
+#  Uri: sys/Corefbe123456@103.74.116.95:1521/corefbe
+#  Host: 103.74.116.95:1521/corefbe
+#  User: sys
+#  Password: Corefbe123456
