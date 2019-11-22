@@ -3,48 +3,67 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/labstack/echo"
 	"github.com/matkinhig/go-todo/config"
-	"gopkg.in/goracle.v2"
+	_ "github.com/mattn/go-oci8"
+	_ "gopkg.in/goracle.v2"
 )
 
 func main() {
 	fmt.Println("start golang")
 	fmt.Println(config.Config)
 
-	testConnection()
+	fmt.Println(config.Config.OracleDB.Uri)
+	GetAllUsersFromDB()
 }
 
 func buildServer() {
 	e := echo.New()
 	err := e.Start(":1234")
-
 	if err != nil {
 		fmt.Println("Cannot start server", err)
 	}
+
 }
 
 func testConnection() {
-	db, err := sql.Open("goracle", "scott/tiger@10.0.1.127:1521/orclpdb1")
+	db, err := sql.Open("oci8", config.Config.OracleDB.Uri)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal(err)
+	}
+	defer db.Close()
+	println("Connection succcess!!")
+	rows, err := db.Query("SELECT sysdate  FROM dual")
+	if err != nil {
+		log.Fatalln("err:", err.Error)
+	}
+	defer rows.Close()
+	var (
+		sysdate string
+	)
+	for rows.Next() {
+		if err = rows.Scan(&sysdate); err != nil {
+			log.Fatalln("error fetching", err)
+		}
+		log.Println(sysdate)
+	}
+}
+
+func GetAllUsersFromDB() {
+	db, err := sql.Open("oci8", config.Config.OracleDB.Uri)
+	if err != nil {
+		log.Fatal(err)
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select sysdate from dual")
-	if err != nil {
-		fmt.Println("Error running query")
-		fmt.Println(err)
-		return
+	rows, exception := db.Query("Select * from user_account")
+	if exception != nil {
+		log.Fatal(exception)
 	}
-	defer rows.Close()
-
-	var thedate string
 	for rows.Next() {
 
-		rows.Scan(&thedate)
 	}
-	fmt.Printf("The date is: %s\n", thedate)
+	defer rows.Close()
 }
