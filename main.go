@@ -7,6 +7,8 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/matkinhig/go-todo/config"
+	"github.com/matkinhig/go-todo/handler"
+	"github.com/matkinhig/go-todo/types"
 	_ "github.com/mattn/go-oci8"
 	_ "gopkg.in/goracle.v2"
 )
@@ -16,7 +18,9 @@ func main() {
 	fmt.Println(config.Config)
 
 	fmt.Println(config.Config.OracleDB.Uri)
+	testConnection()
 	GetAllUsersFromDB()
+	handler.GetUserJson()
 }
 
 func buildServer() {
@@ -57,13 +61,21 @@ func GetAllUsersFromDB() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
-	rows, exception := db.Query("Select * from user_account")
-	if exception != nil {
-		log.Fatal(exception)
+	rows, err := db.Query("Select * from halong.user_account")
+	s := []types.UserAccount{}
+	if err != nil {
+		fmt.Println(err)
+		panic("cant connect to oracle")
 	}
 	for rows.Next() {
-
+		var us types.UserAccount
+		err = rows.Scan(&us.USER_NAME, &us.PASSWORD, &us.EMAIL, &us.AGE)
+		if err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		s = append(s, us)
 	}
-	defer rows.Close()
+
+	fmt.Println(s[1].USER_NAME)
 }

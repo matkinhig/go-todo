@@ -1,8 +1,8 @@
 package types
 
-type User struct {
-	USER_NAME    string
-	PASSWORD     string
-	PHONE_NUMBER string
-	EMAIL        string
+type UserAccount struct {
+	USER_NAME string `json: "username"`
+	PASSWORD  string `json: "password"`
+	AGE       string `json: "phonenumber"`
+	EMAIL     string `json: "email"`
 }
